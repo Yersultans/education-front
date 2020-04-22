@@ -11,6 +11,7 @@ const GET_DATA = gql`
       id
       text
       options
+      correctAnswers
     }
   }
 `
