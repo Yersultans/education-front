@@ -1,7 +1,12 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { Radio } from 'antd'
+import { useRouter } from 'next/router'
+import { gql, useMutation } from '@apollo/client'
+import { Radio, Checkbox, Modal } from 'antd'
+import { ExclamationCircleOutlined } from '@ant-design/icons'
+
+const { confirm, info } = Modal
 
 const MainLayout = styled.div`
   display: flex;
@@ -20,11 +25,15 @@ const QuestionTitle = styled.div`
   display: flex;
   font-size: 22px;
 `
-const Options = styled.div``
+const Options = styled.div`
+  dispaly: flex;
+`
 const OptionGroup = styled(Radio.Group)``
 const OptionButton = styled(Radio)`
   display: block;
 `
+const OptionsCheckbox = styled(Checkbox.Group)``
+const OptionCheckbox = styled(Checkbox)``
 const QuestionsPagination = styled.div`
   width: 320px;
   height: fit-content;
@@ -78,29 +87,102 @@ const FinishButton = styled.button`
   font-size: 14.4px;
   padding: 10px 20px 10px 20px;
 `
-const Questions = ({ questions }) => {
-  const [currentQuestion, setCurrentQuestion] = useState(questions[0].id)
-  const [answers, setAswers] = useState([])
-  const handleRadioChange = (question, answer, index) => {
-    const isCorrect = questions[index].correctAnswers[0] === answer
-    if (answers && answers[index]) {
-      setAswers(
-        answers.map((ans, key) => {
-          return key === index
-            ? { questionId: question.id, userAnswer: answer, isCorrect }
-            : ans
-        })
-      )
-    } else {
-      const newAnswers = answers
-        ? answers.concat([
-            { questionId: question.id, userAnswer: answer, isCorrect }
-          ])
-        : [{ questionId: question.id, userAnswer: answer, isCorrect }]
-      setAswers(newAnswers)
+
+const ADD_HISTORY = gql`
+  mutation addHistory($input: HistoryFilterInput) {
+    addHistory(input: $input) {
+      id
+      user {
+        id
+      }
+      questions {
+        id
+      }
     }
   }
+`
+const Questions = ({ questions, user }) => {
+  const router = useRouter()
+  const [currentQuestion, setCurrentQuestion] = useState(questions[0].id)
+  const [answers, setAnswers] = useState(
+    questions.map(question => {
+      return {
+        question: question.id,
+        user: user.id,
+        lesson: question.lesson.id,
+        subject: question.subject.id,
+        userAnswers: [],
+        isCorrect: false
+      }
+    })
+  )
+  const [addHistory] = useMutation(ADD_HISTORY)
+  const handleRadioChange = (question, answer, index) => {
+    const isCorrect = questions[index].correctAnswers[0] === answer
+    setAnswers(
+      answers.map((ans, key) => {
+        return key === index
+          ? {
+              question: question.id,
+              user: user.id,
+              lesson: ans.lesson,
+              subject: ans.subject,
+              userAnswers: [answer],
+              isCorrect
+            }
+          : ans
+      })
+    )
+  }
+  const handleCheckboxChange = (question, userAnswers, index) => {
+    const isCorrect = question[index].correctAnswers === userAnswers
+    setAnswers(
+      answers.map((ans, key) => {
+        return key === index
+          ? {
+              question: question.id,
+              user: user.id,
+              lesson: ans.lesson,
+              subject: ans.subject,
+              userAnswers: answers,
+              isCorrect
+            }
+          : ans
+      })
+    )
+  }
   const handleFinish = () => {
+    const corrects = answers.filter(answer => answer.isCorrect === true)
+    confirm({
+      title: 'Вы уверены что хотите закончить тест?',
+      icon: <ExclamationCircleOutlined />,
+      okText: 'Да',
+      cancelText: 'Нет',
+      onOk() {
+        addHistory({
+          variables: {
+            input: {
+              answers,
+              total: answers.length,
+              correctAnswers: corrects.length
+            }
+          }
+        })
+        info({
+          title: 'Результаты:',
+          content: `Ваш результат: ${corrects.length}/${answers.length}`,
+          closable: false,
+          okText: 'Да',
+          onOk() {
+            router.push({ pathname: '/profile' })
+          }
+        })
+      },
+      onCancel() {
+        console.log('Cancel')
+      }
+    })
+
     console.log('answers', answers)
   }
   return (
@@ -116,20 +198,38 @@ const Questions = ({ questions }) => {
                   }}
                 />
                 <Options>
-                  <OptionGroup
-                    value={
-                      answers && answers[index] && answers[index].userAnswer
-                    }
-                    onChange={e =>
-                      handleRadioChange(question, e.target.value, index)
-                    }
-                  >
-                    {question.options.map(option => (
-                      <OptionButton value={option} key={option}>
-                        {option}
-                      </OptionButton>
-                    ))}
-                  </OptionGroup>
+                  {question && question.correctAnswers.length < 2 && (
+                    <OptionGroup
+                      value={
+                        answers &&
+                        answers[index] &&
+                        answers[index].userAnswers[0]
+                      }
+                      onChange={e =>
+                        handleRadioChange(question, e.target.value, index)
+                      }
+                    >
+                      {question.options.map(option => (
+                        <OptionButton value={option} key={option}>
+                          {option}
+                        </OptionButton>
+                      ))}
+                    </OptionGroup>
+                  )}
+                  {question && question.correctAnswers.length > 1 && (
+                    <OptionsCheckbox
+                      defaultValue={
+                        answers && answers[index] && answers[index].userAnswers
+                      }
+                      onChange={e => handleCheckboxChange(question, e, index)}
+                    >
+                      {question.options.map(option => (
+                        <OptionCheckbox value={option} key={option}>
+                          {option}
+                        </OptionCheckbox>
+                      ))}
+                    </OptionsCheckbox>
+                  )}
                 </Options>
               </Question>
             )
@@ -141,7 +241,13 @@ const Questions = ({ questions }) => {
           {questions.map((question, index) => (
             <QuestionTable
               selected={question.id === currentQuestion}
-              ans={!!(answers && answers[index])}
+              ans={
+                !!(
+                  answers &&
+                  answers[index] &&
+                  answers[index].userAnswers.length > 0
+                )
+              }
               onClick={() => setCurrentQuestion(question.id)}
               key={question.id}
             >
@@ -174,7 +280,10 @@ Questions.propTypes = {
       options: PropTypes.arrayOf(PropTypes.string),
       correctAnswers: PropTypes.arrayOf(PropTypes.string)
     })
-  ).isRequired
+  ).isRequired,
+  user: PropTypes.shape({
+    id: PropTypes.string
+  }).isRequired
 }
 
 export default Questions

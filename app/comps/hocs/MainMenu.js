@@ -5,7 +5,8 @@ import { ReactSVG } from 'react-svg'
 import { useRouter } from 'next/router'
 import Images from '../../theme/Images'
 import { useAuth } from '../../context/useAuth'
-import { Menu, Layout } from 'antd'
+import { Menu, Layout, Dropdown, Avatar } from 'antd'
+import { UserOutlined, LogoutOutlined } from '@ant-design/icons'
 
 const links = [
   {
@@ -31,6 +32,8 @@ const links = [
   }
 ]
 
+const RigthColumn = styled.div``
+
 function MainMenu() {
   const router = useRouter()
   const { user, logout } = useAuth()
@@ -45,8 +48,25 @@ function MainMenu() {
     link => user && link.allowedUsers.includes(user.role)
   )
 
+  const menu = (
+    <Menu>
+      <Menu.Item
+        key="0"
+        onClick={() => {
+          router.push({ pathname: '/profile', query: {} })
+        }}
+      >
+        <UserOutlined /> Профиль
+      </Menu.Item>
+      <Menu.Divider />
+      <Menu.Item key="1" onClick={() => logout()}>
+        <LogoutOutlined /> Выйти
+      </Menu.Item>
+    </Menu>
+  )
+
   return (
-    <Layout.Header>
+    <Layout.Header style={{ display: 'flex', justifyContent: 'space-between' }}>
       <Menu
         theme="dark"
         mode="horizontal"
@@ -68,6 +88,15 @@ function MainMenu() {
           </Menu.Item>
         ))}
       </Menu>
+      {user && user.username ? (
+        <RigthColumn>
+          <Dropdown overlay={menu}>
+            <Avatar icon={<UserOutlined />} />
+          </Dropdown>
+        </RigthColumn>
+      ) : (
+        <RigthColumn>sadasd</RigthColumn>
+      )}
     </Layout.Header>
   )
 }

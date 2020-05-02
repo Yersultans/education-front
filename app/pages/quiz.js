@@ -6,7 +6,7 @@ import QuizContainer from '../comps/Quiz/Quiz.container'
 const QuizPage = () => (
   <Fragment>
     <Helmet>
-      <title>Posts|Education</title>
+      <title>Quiz|Education</title>
     </Helmet>
     <QuizContainer />
   </Fragment>

@@ -3,9 +3,10 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { useRouter } from 'next/router'
 import { useQuery, gql, useMutation } from '@apollo/client'
-import { Spin, Form, Input, Button } from 'antd'
+import { Spin, Form, Input, Button, Avatar } from 'antd'
 import { ClockCircleOutlined, UserOutlined } from '@ant-design/icons'
 import { useAuth } from '../../context/useAuth'
+import { useMessages } from '../../context/useMessages'
 
 const { TextArea } = Input
 const GET_FORM = gql`
@@ -77,6 +78,7 @@ const MainContainer = styled.div`
 `
 const TitleRow = styled.div`
   height: 88px;
+  width: 60%;
   align-items: center;
 `
 const PostTitle = styled.div`
@@ -101,19 +103,44 @@ const ContentContainer = styled.div`
   display: flex;
   flex-direction: column;
   margin-bottom: 24px;
+  width: 60%;
 `
 const FormDescription = styled.div`
   border: 1px solid rgba(0, 0, 0, 0.05);
   border-radius: 6px;
   padding: 9px 17px 19px;
 `
-const CommentContainer = styled.div``
+const CommentContainer = styled.div`
+  width: 60%;
+`
 const CommentTitle = styled.div`
   font-size: 17px;
 `
-
+const Messages = styled.div``
+const Message = styled.div`
+  display: flex;
+  margin-bottom: 16px;
+`
+const UserAvatar = styled.div`
+  margin-right: 16px;
+`
+const MessageContent = styled.div`
+  width: -webkit-fill-available;
+`
+const MainContent = styled.div`
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 6px;
+  padding: 9px 17px 19px;
+`
+const ContentInfo = styled.div`
+  display: flex;
+  font-size: 13px;
+`
+const MessageAuthor = styled.div``
+const MessageData = styled.div``
 const FormContainer = () => {
   const [text, setText] = useState('')
+  const { displayMessage } = useMessages()
   const { user } = useAuth()
   const router = useRouter()
   const { formId } = router.query
@@ -165,6 +192,7 @@ const FormContainer = () => {
     addFormMessage({
       variables: { input: { content: text, form: formId, user: user.id } }
     })
+    displayMessage({ type: 'notify', message: 'Ваш комментарий добавлен' })
     setText('')
   }
   return (
@@ -207,6 +235,33 @@ const FormContainer = () => {
             </Button>
           </Form.Item>
         </div>
+        <Messages>
+          {form.messages.map(message => (
+            <Message>
+              <UserAvatar>
+                <Avatar icon={<UserOutlined />} />
+              </UserAvatar>
+              <MessageContent>
+                <MainContent>{message.content}</MainContent>
+                <ContentInfo>
+                  <MessageAuthor>
+                    <UserOutlined />
+                    {message.user.firstName
+                      ? message.user.firstName
+                      : 'Ерсултан'}{' '}
+                    {message.user.lastName ? message.user.lastName : 'Калыбаев'}
+                  </MessageAuthor>
+                  <MessageData>
+                    <ClockCircleOutlined />
+                    {message.creatAt
+                      ? message.creatAt
+                      : '25 декабря 2018 в 16:59'}
+                  </MessageData>
+                </ContentInfo>
+              </MessageContent>
+            </Message>
+          ))}
+        </Messages>
       </CommentContainer>
     </MainContainer>
   )

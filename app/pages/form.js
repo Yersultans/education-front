@@ -6,7 +6,7 @@ import FormContainer from '../comps/Forms/Form.container'
 const FormPage = () => (
   <Fragment>
     <Helmet>
-      <title>Forms|Education</title>
+      <title>Form|Education</title>
     </Helmet>
     <FormContainer />
   </Fragment>
