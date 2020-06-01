@@ -84,6 +84,7 @@ const ADD_FORM = gql`
 const FromsContainer = () => {
   const { displayMessage } = useMessages()
   const [modalView, setModalView] = useState('list')
+  const [forms, setForms] = useState([])
   const { loading, error, data } = useQuery(GET_FORMS)
   const router = useRouter()
   const [addForm] = useMutation(ADD_FORM, {
@@ -95,6 +96,22 @@ const FromsContainer = () => {
       })
     }
   })
+
+  React.useEffect(() => {
+    if (data && data.forms) {
+      setForms(
+        data.forms.map(form => {
+          return {
+            id: form.id,
+            name: form.name,
+            description: form.description,
+            user: form.user,
+            createdAt: new Date(form.createdAt)
+          }
+        })
+      )
+    }
+  }, [data, loading, error])
 
   const onFormClick = form => {
     router.push({ pathname: '/form', query: { formId: form.id } })
@@ -134,9 +151,8 @@ const FromsContainer = () => {
             </AddRow>
           </MainTitle>
           <FormsDiv>
-            {data &&
-              data.forms &&
-              data.forms.map(form => (
+            {forms &&
+              forms.map(form => (
                 <FormDiv>
                   <FormTitel>
                     <FormName
@@ -146,7 +162,7 @@ const FromsContainer = () => {
                     >
                       {form.name}
                     </FormName>
-                    <FormDate>{form.createdAt}</FormDate>
+                    <FormDate>{form.createdAt.toString()}</FormDate>
                   </FormTitel>
                   <FormAuthor>
                     {form.user.firstName} {form.user.lastName}

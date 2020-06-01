@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { useRouter } from 'next/router'
-import { useQuery, gql, useMutation } from '@apollo/client'
+import { useQuery, gql, useMutation, useLazyQuery } from '@apollo/client'
 import { Spin, Form, Input, Button, Avatar } from 'antd'
 import { UserOutlined, ClockCircleOutlined } from '@ant-design/icons'
 import { useAuth } from '../../context/useAuth'
@@ -30,6 +29,7 @@ const GET_POST = gql`
           firstName
           lastName
         }
+        createdAt
       }
     }
   }
@@ -44,6 +44,7 @@ const ADD_FORM_MESSAGE = gql`
         firstName
         lastName
       }
+      createdAt
     }
   }
 `
@@ -68,6 +69,7 @@ const UPDATE_POST = gql`
           firstName
           lastName
         }
+        createdAt
       }
     }
   }
@@ -139,9 +141,7 @@ const PostContainer = () => {
   const { user } = useAuth()
   const router = useRouter()
   const { postId } = router.query
-  const { loading, error, data } = useQuery(GET_POST, {
-    variables: { id: router.query.postId }
-  })
+  const [getPost, { loading, error, data }] = useLazyQuery(GET_POST)
   const [updatePost] = useMutation(UPDATE_POST)
   const [addFormMessage] = useMutation(ADD_FORM_MESSAGE, {
     update(cache, { data: { addFormMessage: formMessage } }) {
@@ -173,9 +173,34 @@ const PostContainer = () => {
     }
   })
   const [post, setPost] = useState(null)
+
   useEffect(() => {
-    if (data && data.post) setPost(data.post)
-  }, [data])
+    if (postId) {
+      getPost({
+        variables: { id: postId }
+      })
+    }
+  }, [postId])
+
+  useEffect(() => {
+    if (data && data.post)
+      setPost({
+        id: data.post.id,
+        name: data.post.name,
+        imageUrl: data.post.imageUrl,
+        content: data.post.content,
+        user: data.post.user,
+        createdAt: new Date(data.post.createdAt),
+        messages: data.post.messages.map(message => {
+          return {
+            id: message.id,
+            content: message.content,
+            user: message.user,
+            createdAt: new Date(message.createdAt)
+          }
+        })
+      })
+  }, [data, loading, error])
 
   if (loading || !post)
     return (
@@ -201,7 +226,7 @@ const PostContainer = () => {
             {post.user.firstName ? post.user.firstName : 'Ерсултан'}{' '}
             {post.user.lastName ? post.user.lastName : 'Калыбаев'}
           </PostAuthor>
-          <PostData>{post.creatAt}</PostData>
+          <PostData>{post.createdAt}</PostData>
         </PostInfo>
       </TitleRow>
       <ContentContainer
@@ -248,8 +273,8 @@ const PostContainer = () => {
                   </MessageAuthor>
                   <MessageData>
                     <ClockCircleOutlined />
-                    {message.creatAt
-                      ? message.creatAt
+                    {message.createdAt
+                      ? message.createdAt
                       : '25 декабря 2018 в 16:59'}
                   </MessageData>
                 </ContentInfo>

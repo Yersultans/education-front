@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { useRouter } from 'next/router'
-import { useQuery, gql } from '@apollo/client'
+import { gql, useLazyQuery } from '@apollo/client'
 import { Spin } from 'antd'
+import LessonPanel from './LessonPanel'
+import Content from './Content'
 
 const MainContainer = styled.div`
-  padding-top: 16px;
   width: 100%;
   height: 90vh;
   display: flex;
@@ -19,9 +19,15 @@ const Sider = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   border-right: 1px solid rgba(0, 0, 0, 0.05);
 `
+const SubjectDiv = styled.div`
+  padding: 16px;
+`
+const SubjectName = styled.div`
+  font-size: 24px;
+`
+const SubjectButton = styled.button``
 const LessonsDiv = styled.div`
   width: 100%;
   overflow: auto;
@@ -49,10 +55,14 @@ const GET_SUBJECT = gql`
   query getSubject($id: ID!) {
     subject(id: $id) {
       id
+      name
       lessons {
         id
         name
-        content
+        activities {
+          id
+          name
+        }
       }
     }
   }
@@ -60,18 +70,32 @@ const GET_SUBJECT = gql`
 const SubjectContainer = () => {
   const router = useRouter()
   const { subjectId } = router.query
-  const { loading, error, data } = useQuery(GET_SUBJECT, {
-    variables: { id: router.query.subjectId }
-  })
+  const [getSubject, { loading, error, data }] = useLazyQuery(GET_SUBJECT)
 
   const [subject, setSubject] = useState(null)
-  const [currentLesson, setCurrentLesson] = useState(null)
+  const [currentContent, setCurrentContent] = useState(null)
+
+  useEffect(() => {
+    if (subjectId) {
+      getSubject({
+        variables: { id: subjectId }
+      })
+    }
+  }, [subjectId])
   useEffect(() => {
     if (data && data.subject) {
       setSubject(data.subject)
-      setCurrentLesson(data.subject.lessons[0])
+      setCurrentContent({ lessonId: data.subject.lessons[0].id })
     }
-  }, [data])
+  }, [data, loading, error])
+
+  const handleClickLesson = lessonId => {
+    setCurrentContent({ lessonId })
+  }
+
+  const handleClickActivity = activityId => {
+    setCurrentContent({ activityId })
+  }
 
   if (loading || !subject)
     return (
@@ -83,25 +107,33 @@ const SubjectContainer = () => {
   return (
     <MainContainer>
       <Sider>
+        <SubjectDiv>
+          <SubjectName>{subject.name}</SubjectName>
+          <SubjectButton>Тест по {subject.name}</SubjectButton>
+        </SubjectDiv>
         <LessonsDiv>
           {subject &&
             subject.lessons.map(lesson => (
-              <LessonDiv
-                onClick={() => {
-                  setCurrentLesson(lesson)
-                }}
-                selected={lesson.id === currentLesson.id}
-              >
-                {lesson.name}
-              </LessonDiv>
+              <LessonPanel
+                lesson={lesson}
+                currentContent={currentContent}
+                onClickLesson={handleClickLesson}
+                onClickActivity={handleClickActivity}
+              />
+              // <LessonDiv
+              //   onClick={() => {
+              //     setCurrentContent({ lessonId: lesson.id })
+              //   }}
+              //   selected={lesson.id === currentContent.lessonId}
+              // >
+              //   {lesson.name}
+              // </LessonDiv>
             ))}
         </LessonsDiv>
       </Sider>
-      <ContentLayout
-        dangerouslySetInnerHTML={{
-          __html: currentLesson.content
-        }}
-      />
+      <ContentLayout>
+        <Content currentContent={currentContent} />
+      </ContentLayout>
     </MainContainer>
   )
 }

@@ -1,8 +1,5 @@
-import React, { useEffect } from 'react'
-import { DragDropContextProvider } from 'react-dnd'
-import HTML5Backend from 'react-dnd-html5-backend'
-import { initGA } from 'lib/ReactGA'
-import i18n from 'i18n'
+import React from 'react'
+import PropTypes from 'prop-types'
 import fetch from 'node-fetch'
 import {
   ApolloClient,
@@ -42,30 +39,20 @@ const apolloClient = new ApolloClient({
 })
 
 function MyApp({ Component, pageProps }) {
-  function setEnvOnFront() {
-    if (!process.browser || window.env) return
-    i18n.changeLanguage('en')
-    window.env = {
-      BACKEND_URL: 'https://warm-cliffs-58797.herokuapp.com/graphql'
-    }
-  }
-
-  useEffect(() => {
-    initGA()
-    setEnvOnFront()
-  })
-
   return (
-    <DragDropContextProvider backend={HTML5Backend}>
-      <ApolloProvider client={apolloClient}>
-        <ProvideMessages>
-          <ProvideAuth>
-            <Component {...pageProps} />
-          </ProvideAuth>
-        </ProvideMessages>
-      </ApolloProvider>
-    </DragDropContextProvider>
+    <ApolloProvider client={apolloClient}>
+      <ProvideMessages>
+        <ProvideAuth>
+          <Component {...pageProps} />
+        </ProvideAuth>
+      </ProvideMessages>
+    </ApolloProvider>
   )
+}
+
+MyApp.propTypes = {
+  Component: PropTypes.func.isRequired,
+  pageProps: PropTypes.shape({}).isRequired
 }
 
 export default MyApp

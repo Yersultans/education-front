@@ -28,7 +28,9 @@ const GET_FORM = gql`
           firstName
           lastName
         }
+        createdAt
       }
+      createdAt
     }
   }
 `
@@ -42,6 +44,7 @@ const ADD_FORM_MESSAGE = gql`
         firstName
         lastName
       }
+      createdAt
     }
   }
 `
@@ -64,7 +67,9 @@ const UPDATE_FORM = gql`
           firstName
           lastName
         }
+        createdAt
       }
+      createdAt
     }
   }
 `
@@ -144,9 +149,7 @@ const FormContainer = () => {
   const { user } = useAuth()
   const router = useRouter()
   const { formId } = router.query
-  const { loading, error, data } = useQuery(GET_FORM, {
-    variables: { id: router.query.formId }
-  })
+  const [getForm, { loading, error, data }] = useQuery(GET_FORM)
   const [updateForm] = useMutation(UPDATE_FORM)
   const [addFormMessage] = useMutation(ADD_FORM_MESSAGE, {
     update(cache, { data: { addFormMessage: formMessage } }) {
@@ -159,6 +162,7 @@ const FormContainer = () => {
         name: form.name,
         description: form.description,
         user: form.user,
+        createdAt: form.createdAt,
         messages: form.messages
           ? form.messages.concat([formMessage])
           : [formMessage]
@@ -177,8 +181,31 @@ const FormContainer = () => {
   })
 
   const [form, setForm] = useState(null)
+
   useEffect(() => {
-    if (data && data.form) setForm(data.form)
+    if (formId) {
+      getForm({
+        variables: { id: formId }
+      })
+    }
+  }, [formId])
+  useEffect(() => {
+    if (data && data.form)
+      setForm({
+        id: data.form.id,
+        name: data.form.name,
+        description: data.form.description,
+        user: data.form.user,
+        messages: data.form.messages.map(message => {
+          return {
+            id: message.id,
+            content: message.content,
+            user: message.user,
+            createdAt: new Date(message.createdAt)
+          }
+        }),
+        createdAt: new Date(data.form.createdAt)
+      })
   }, [data])
 
   if (loading || !form)
@@ -207,7 +234,7 @@ const FormContainer = () => {
           </PostAuthor>
           <PostData>
             <ClockCircleOutlined />
-            {form.creatAt ? form.creatAt : '25 декабря 2018 в 16:59'}
+            {form.createdAt ? form.createdAt : '25 декабря 2018 в 16:59'}
           </PostData>
         </PostInfo>
       </TitleRow>
@@ -253,8 +280,8 @@ const FormContainer = () => {
                   </MessageAuthor>
                   <MessageData>
                     <ClockCircleOutlined />
-                    {message.creatAt
-                      ? message.creatAt
+                    {message.createdAt
+                      ? message.createdAt
                       : '25 декабря 2018 в 16:59'}
                   </MessageData>
                 </ContentInfo>

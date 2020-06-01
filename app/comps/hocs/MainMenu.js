@@ -95,7 +95,11 @@ function MainMenu() {
           </Dropdown>
         </RigthColumn>
       ) : (
-        <RigthColumn>sadasd</RigthColumn>
+        <RigthColumn>
+          <div onClick={() => logout()} style={{ color: '#fff' }}>
+            <LogoutOutlined /> Выйти
+          </div>
+        </RigthColumn>
       )}
     </Layout.Header>
   )

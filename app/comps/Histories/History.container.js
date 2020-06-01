@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import { useRouter } from 'next/router'
-import { useQuery, gql } from '@apollo/client'
+import { useQuery, gql, useLazyQuery } from '@apollo/client'
 import { Spin } from 'antd'
 import History from './History'
 
@@ -28,9 +28,16 @@ const GET_DATA = gql`
 const HistoryContainer = () => {
   const router = useRouter()
   const { historyId } = router.query
-  const { loading, error, data } = useQuery(GET_DATA, {
-    variables: { id: historyId }
-  })
+  const [getHistory, { loading, error, data }] = useLazyQuery(GET_DATA)
+
+  useEffect(() => {
+    if (historyId) {
+      getHistory({
+        variables: { id: historyId }
+      })
+    }
+  }, historyId)
+
   if (loading)
     return (
       <div style={{ textAlign: 'center' }}>

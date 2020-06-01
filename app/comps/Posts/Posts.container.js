@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { useRouter } from 'next/router'
 import { useQuery, gql } from '@apollo/client'
@@ -41,16 +41,34 @@ const GET_POSTS = gql`
         firstName
         lastName
       }
+      createdAt
     }
   }
 `
 const PostsContainer = () => {
+  const [posts, setPosts] = useState([])
   const { loading, error, data } = useQuery(GET_POSTS)
   const router = useRouter()
 
   const onPostClick = post => {
     router.push({ pathname: '/post', query: { postId: post.id } })
   }
+
+  React.useEffect(() => {
+    if (data && data.posts) {
+      setPosts(
+        data.posts.map(post => {
+          return {
+            id: post.id,
+            name: post.name,
+            imageUrl: post.imageUrl,
+            user: post.imageUrl,
+            createdAt: new Date(post.createdAt)
+          }
+        })
+      )
+    }
+  }, [data, loading, error])
 
   if (error) {
     return <div>Some error from graphql</div>
@@ -72,9 +90,8 @@ const PostsContainer = () => {
         <MainTitle>Блог</MainTitle>
         <PostItemsContainer>
           {loading === false &&
-            data &&
-            data.posts &&
-            data.posts.map(post => (
+            posts &&
+            posts.map(post => (
               <PostCard
                 key={post.id}
                 post={post}
