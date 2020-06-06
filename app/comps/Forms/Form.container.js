@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { useRouter } from 'next/router'
-import { useQuery, gql, useMutation } from '@apollo/client'
+import { useQuery, gql, useMutation, useLazyQuery } from '@apollo/client'
 import { Spin, Form, Input, Button, Avatar } from 'antd'
 import { ClockCircleOutlined, UserOutlined } from '@ant-design/icons'
 import { useAuth } from '../../context/useAuth'
@@ -143,13 +143,14 @@ const ContentInfo = styled.div`
 `
 const MessageAuthor = styled.div``
 const MessageData = styled.div``
+
 const FormContainer = () => {
   const [text, setText] = useState('')
   const { displayMessage } = useMessages()
   const { user } = useAuth()
   const router = useRouter()
   const { formId } = router.query
-  const [getForm, { loading, error, data }] = useQuery(GET_FORM)
+  const [getForm, { loading, error, data }] = useLazyQuery(GET_FORM)
   const [updateForm] = useMutation(UPDATE_FORM)
   const [addFormMessage] = useMutation(ADD_FORM_MESSAGE, {
     update(cache, { data: { addFormMessage: formMessage } }) {
@@ -189,26 +190,12 @@ const FormContainer = () => {
       })
     }
   }, [formId])
-  useEffect(() => {
-    if (data && data.form)
-      setForm({
-        id: data.form.id,
-        name: data.form.name,
-        description: data.form.description,
-        user: data.form.user,
-        messages: data.form.messages.map(message => {
-          return {
-            id: message.id,
-            content: message.content,
-            user: message.user,
-            createdAt: new Date(message.createdAt)
-          }
-        }),
-        createdAt: new Date(data.form.createdAt)
-      })
-  }, [data])
 
-  if (loading || !form)
+  useEffect(() => {
+    if (data && data.form && !error && !loading) setForm(data.form)
+  }, [data, loading, error])
+
+  if (loading)
     return (
       <div style={{ textAlign: 'center' }}>
         <Spin />
@@ -223,74 +210,81 @@ const FormContainer = () => {
     setText('')
   }
   return (
-    <MainContainer>
-      <TitleRow>
-        <PostTitle>{form.name}</PostTitle>
-        <PostInfo>
-          <PostAuthor>
-            <UserOutlined />
-            {form.user.firstName ? form.user.firstName : 'Ерсултан'}{' '}
-            {form.user.lastName ? form.user.lastName : 'Калыбаев'}
-          </PostAuthor>
-          <PostData>
-            <ClockCircleOutlined />
-            {form.createdAt ? form.createdAt : '25 декабря 2018 в 16:59'}
-          </PostData>
-        </PostInfo>
-      </TitleRow>
-      <ContentContainer>
-        <FormDescription>{form.description}</FormDescription>
-      </ContentContainer>
-      <CommentContainer>
-        <CommentTitle>Комментарии • {form.messages.length}</CommentTitle>
-        <div>
-          <Form.Item>
-            <TextArea
-              rows={4}
-              onChange={e => setText(e.target.value)}
-              value={text}
-            />
-          </Form.Item>
-          <Form.Item>
-            <Button
-              htmlType="submit"
-              type="primary"
-              disabled={text === ''}
-              onClick={onSubmit}
-            >
-              Отправить
-            </Button>
-          </Form.Item>
-        </div>
-        <Messages>
-          {form.messages.map(message => (
-            <Message>
-              <UserAvatar>
-                <Avatar icon={<UserOutlined />} />
-              </UserAvatar>
-              <MessageContent>
-                <MainContent>{message.content}</MainContent>
-                <ContentInfo>
-                  <MessageAuthor>
-                    <UserOutlined />
-                    {message.user.firstName
-                      ? message.user.firstName
-                      : 'Ерсултан'}{' '}
-                    {message.user.lastName ? message.user.lastName : 'Калыбаев'}
-                  </MessageAuthor>
-                  <MessageData>
-                    <ClockCircleOutlined />
-                    {message.createdAt
-                      ? message.createdAt
-                      : '25 декабря 2018 в 16:59'}
-                  </MessageData>
-                </ContentInfo>
-              </MessageContent>
-            </Message>
-          ))}
-        </Messages>
-      </CommentContainer>
-    </MainContainer>
+    <>
+      {formId && form && (
+        <MainContainer>
+          <TitleRow>
+            <PostTitle>{form.name}</PostTitle>
+            <PostInfo>
+              <PostAuthor>
+                <UserOutlined />
+                {form.user.firstName ? form.user.firstName : 'Ерсултан'}{' '}
+                {form.user.lastName ? form.user.lastName : 'Калыбаев'}
+              </PostAuthor>
+              <PostData>
+                <ClockCircleOutlined />
+                {form.createdAt ? form.createdAt : '25 декабря 2018 в 16:59'}
+              </PostData>
+            </PostInfo>
+          </TitleRow>
+          <ContentContainer>
+            <FormDescription>{form.description}</FormDescription>
+          </ContentContainer>
+          <CommentContainer>
+            <CommentTitle>Комментарии • {form.messages.length}</CommentTitle>
+            <div>
+              <Form.Item>
+                <TextArea
+                  rows={4}
+                  onChange={e => setText(e.target.value)}
+                  value={text}
+                />
+              </Form.Item>
+              <Form.Item>
+                <Button
+                  htmlType="submit"
+                  type="primary"
+                  disabled={text === ''}
+                  onClick={onSubmit}
+                >
+                  Отправить
+                </Button>
+              </Form.Item>
+            </div>
+            <Messages>
+              {form.messages &&
+                form.messages.map(message => (
+                  <Message>
+                    <UserAvatar>
+                      <Avatar icon={<UserOutlined />} />
+                    </UserAvatar>
+                    <MessageContent>
+                      <MainContent>{message.content}</MainContent>
+                      <ContentInfo>
+                        <MessageAuthor>
+                          <UserOutlined />
+                          {message.user && message.user.firstName
+                            ? message.user.firstName
+                            : 'Ерсултан'}{' '}
+                          {message.user && message.user.lastName
+                            ? message.user.lastName
+                            : 'Калыбаев'}
+                        </MessageAuthor>
+                        <MessageData>
+                          <ClockCircleOutlined />
+                          {message.createdAt
+                            ? message.createdAt
+                            : '25 декабря 2018 в 16:59'}
+                        </MessageData>
+                      </ContentInfo>
+                    </MessageContent>
+                  </Message>
+                ))}
+            </Messages>
+          </CommentContainer>
+        </MainContainer>
+      )}
+    </>
   )
 }
 export default FormContainer

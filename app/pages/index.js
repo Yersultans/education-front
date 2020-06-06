@@ -6,7 +6,7 @@ import SubjectsContainer from '../comps/Subjects/Subjects.container'
 const IndexPage = () => (
   <Fragment>
     <Helmet>
-      <title>Index|Education</title>
+      <title>Пердметы|Education</title>
     </Helmet>
     <SubjectsContainer />
   </Fragment>

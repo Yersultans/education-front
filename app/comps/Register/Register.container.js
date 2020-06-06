@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 import styled from 'styled-components'
 import { useMessages } from '../../context/useMessages'
 import { RegisterForm } from './RegisterForm'
+import { useRouter } from 'next/router'
 
 const REGISTER = gql`
   mutation register($input: UserInput!) {
@@ -17,6 +18,7 @@ const REGISTER = gql`
 `
 
 const RegisterContainer = () => {
+  const router = useRouter()
   const { displayMessage } = useMessages()
 
   const [register, { data, loading, error }] = useMutation(REGISTER)
@@ -25,7 +27,8 @@ const RegisterContainer = () => {
     if (!loading && error) {
       displayMessage({ type: 'error', message: JSON.stringify(error.message) })
     } else if (data && data.register) {
-      displayMessage({ type: 'notify', message: 'Successfully logged in' })
+      displayMessage({ type: 'notify', message: 'Успешно зарегистрированный в систему' })
+      router.push('/login')
     }
   }, [data, loading, error])
 

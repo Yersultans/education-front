@@ -75,35 +75,32 @@ const RegisterForm = ({ user, onSubmit }) => {
   return (
     <MainLayout>
       <HandImage src="../static/images/hand-emoji.png" />
-      <TitleText>
-        You were invited to{' '}
-        {user.school ? user.school.name : 'Some organisation'}!
-      </TitleText>
+      <TitleText>Зарегистрироваться в системе!</TitleText>
       <FormItemText>Username</FormItemText>
       <StyledTextInput
         type="text"
         value={username}
         onChange={e => setUsername(e.target.value)}
       />
-      <FormItemText>First Name</FormItemText>
+      <FormItemText>Имя</FormItemText>
       <StyledTextInput
         type="text"
         value={firstName}
         onChange={e => setFirstName(e.target.value)}
       />
-      <FormItemText>Last Name</FormItemText>
+      <FormItemText>Фамилия</FormItemText>
       <StyledTextInput
         type="text"
         value={lastName}
         onChange={e => setLastName(e.target.value)}
       />
-      <FormItemText>Create Password</FormItemText>
+      <FormItemText>Создать пароль</FormItemText>
       <StyledTextInput
         type="password"
         value={password}
         onChange={e => setPassword(e.target.value)}
       />
-      <FormItemText>Repeat Password</FormItemText>
+      <FormItemText>Повтарить пароль</FormItemText>
       <StyledTextInput
         type="repeatPassword"
         value={repeatPassword}

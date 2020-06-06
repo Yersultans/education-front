@@ -11,6 +11,7 @@ const GET_HISTORY = gql`
       id
       total
       correctAnswers
+      createdAt
     }
   }
 `

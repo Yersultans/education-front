@@ -6,7 +6,7 @@ import ProfileContainer from '../comps/Profile/Profile.container'
 const ProfilePage = () => (
   <Fragment>
     <Helmet>
-      <title>Profile|Education</title>
+      <title>Профиль|Education</title>
     </Helmet>
     <ProfileContainer />
   </Fragment>

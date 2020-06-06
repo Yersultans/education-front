@@ -50,14 +50,14 @@ const LessonContent = ({ lessonId }) => {
     <ContentLayout>
       <ContentName>{lesson.name}</ContentName>
       <Tabs defaultActiveKey="1">
-        <TabPane tab="Статистика" key="1">
+        <TabPane tab="Теория" key="1">
           <ContentDiv
             dangerouslySetInnerHTML={{
               __html: lesson.content
             }}
           />
         </TabPane>
-        <TabPane tab="История тестов" key="2">
+        <TabPane tab="Видео" key="2">
           sadada
         </TabPane>
       </Tabs>

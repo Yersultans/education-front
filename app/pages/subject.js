@@ -6,7 +6,7 @@ import SubjectContainer from '../comps/Subjects/Subject.container'
 const SubjectPage = () => (
   <Fragment>
     <Helmet>
-      <title>Subject|Education</title>
+      <title>Предметы|Education</title>
     </Helmet>
     <SubjectContainer />
   </Fragment>

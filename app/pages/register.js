@@ -6,7 +6,7 @@ function RegisterPage() {
   return (
     <React.Fragment>
       <Helmet>
-        <title>Register|Education</title>
+        <title>Зарегистрировать|Education</title>
       </Helmet>
       <RegisterContainer />
     </React.Fragment>

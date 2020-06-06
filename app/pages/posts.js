@@ -6,7 +6,7 @@ import PostsContainer from '../comps/Posts/Posts.container'
 const PostsPage = () => (
   <Fragment>
     <Helmet>
-      <title>Posts|Education</title>
+      <title>Посты|Education</title>
     </Helmet>
     <PostsContainer />
   </Fragment>

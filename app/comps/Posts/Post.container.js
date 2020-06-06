@@ -183,26 +183,10 @@ const PostContainer = () => {
   }, [postId])
 
   useEffect(() => {
-    if (data && data.post)
-      setPost({
-        id: data.post.id,
-        name: data.post.name,
-        imageUrl: data.post.imageUrl,
-        content: data.post.content,
-        user: data.post.user,
-        createdAt: new Date(data.post.createdAt),
-        messages: data.post.messages.map(message => {
-          return {
-            id: message.id,
-            content: message.content,
-            user: message.user,
-            createdAt: new Date(message.createdAt)
-          }
-        })
-      })
+    if (data && data.post) setPost(data.post)
   }, [data, loading, error])
 
-  if (loading || !post)
+  if (loading)
     return (
       <div style={{ textAlign: 'center' }}>
         <Spin />
@@ -217,73 +201,79 @@ const PostContainer = () => {
     setText('')
   }
   return (
-    <MainContainer>
-      <TitleRow>
-        <PostTitle>{post.name}</PostTitle>
-        <PostInfo>
-          <PostAuthor>
-            <UserOutlined />
-            {post.user.firstName ? post.user.firstName : 'Ерсултан'}{' '}
-            {post.user.lastName ? post.user.lastName : 'Калыбаев'}
-          </PostAuthor>
-          <PostData>{post.createdAt}</PostData>
-        </PostInfo>
-      </TitleRow>
-      <ContentContainer
-        dangerouslySetInnerHTML={{
-          __html: post.content
-        }}
-      />
-      <CommentContainer>
-        <CommentTitle>Комментарии • {post.messages.length}</CommentTitle>
-        <div>
-          <Form.Item>
-            <TextArea
-              rows={4}
-              onChange={e => setText(e.target.value)}
-              value={text}
-            />
-          </Form.Item>
-          <Form.Item>
-            <Button
-              htmlType="submit"
-              type="primary"
-              disabled={text === ''}
-              onClick={onSubmit}
-            >
-              Отправить
-            </Button>
-          </Form.Item>
-        </div>
-        <Messages>
-          {post.messages.map(message => (
-            <Message>
-              <UserAvatar>
-                <Avatar icon={<UserOutlined />} />
-              </UserAvatar>
-              <MessageContent>
-                <MainContent>{message.content}</MainContent>
-                <ContentInfo>
-                  <MessageAuthor>
-                    <UserOutlined />
-                    {message.user.firstName
-                      ? message.user.firstName
-                      : 'Ерсултан'}{' '}
-                    {message.user.lastName ? message.user.lastName : 'Калыбаев'}
-                  </MessageAuthor>
-                  <MessageData>
-                    <ClockCircleOutlined />
-                    {message.createdAt
-                      ? message.createdAt
-                      : '25 декабря 2018 в 16:59'}
-                  </MessageData>
-                </ContentInfo>
-              </MessageContent>
-            </Message>
-          ))}
-        </Messages>
-      </CommentContainer>
-    </MainContainer>
+    <>
+      {postId && post && (
+        <MainContainer>
+          <TitleRow>
+            <PostTitle>{post.name}</PostTitle>
+            <PostInfo>
+              <PostAuthor>
+                <UserOutlined />
+                {post.user.firstName ? post.user.firstName : 'Ерсултан'}{' '}
+                {post.user.lastName ? post.user.lastName : 'Калыбаев'}
+              </PostAuthor>
+              <PostData>{post.createdAt}</PostData>
+            </PostInfo>
+          </TitleRow>
+          <ContentContainer
+            dangerouslySetInnerHTML={{
+              __html: post.content
+            }}
+          />
+          <CommentContainer>
+            <CommentTitle>Комментарии • {post.messages.length}</CommentTitle>
+            <div>
+              <Form.Item>
+                <TextArea
+                  rows={4}
+                  onChange={e => setText(e.target.value)}
+                  value={text}
+                />
+              </Form.Item>
+              <Form.Item>
+                <Button
+                  htmlType="submit"
+                  type="primary"
+                  disabled={text === ''}
+                  onClick={onSubmit}
+                >
+                  Отправить
+                </Button>
+              </Form.Item>
+            </div>
+            <Messages>
+              {post.messages.map(message => (
+                <Message>
+                  <UserAvatar>
+                    <Avatar icon={<UserOutlined />} />
+                  </UserAvatar>
+                  <MessageContent>
+                    <MainContent>{message.content}</MainContent>
+                    <ContentInfo>
+                      <MessageAuthor>
+                        <UserOutlined />
+                        {message.user.firstName
+                          ? message.user.firstName
+                          : 'Ерсултан'}{' '}
+                        {message.user.lastName
+                          ? message.user.lastName
+                          : 'Калыбаев'}
+                      </MessageAuthor>
+                      <MessageData>
+                        <ClockCircleOutlined />
+                        {message.createdAt
+                          ? message.createdAt
+                          : '25 декабря 2018 в 16:59'}
+                      </MessageData>
+                    </ContentInfo>
+                  </MessageContent>
+                </Message>
+              ))}
+            </Messages>
+          </CommentContainer>
+        </MainContainer>
+      )}
+    </>
   )
 }
 export default PostContainer

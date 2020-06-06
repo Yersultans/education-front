@@ -6,7 +6,7 @@ import HistoryContainer from '../comps/Histories/History.container'
 const HistoryPage = () => (
   <Fragment>
     <Helmet>
-      <title>Post|Education</title>
+      <title>История|Education</title>
     </Helmet>
     <HistoryContainer />
   </Fragment>

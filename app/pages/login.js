@@ -6,7 +6,7 @@ function LoginPage() {
   return (
     <React.Fragment>
       <Helmet>
-        <title>Login|Education</title>
+        <title>Авторизоваться|Education</title>
       </Helmet>
       <LoginContainer />
     </React.Fragment>

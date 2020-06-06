@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
+import { useRouter } from 'next/router'
 
 const MainLayout = styled.div`
   width: 520px;
@@ -43,6 +44,17 @@ const FormItemText = styled.div`
   margin-bottom: 16px;
 `
 
+const RegisterDiv = styled.div`
+  margin-top: 16px;
+  cursor: pointer;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 16px;
+  color: #212428;
+`
+
 const StyledTextInput = styled.input`
   height: 48px;
   background: #fbfbfb;
@@ -66,6 +78,7 @@ const StyledSubmitButton = styled.button`
 `
 
 const LoginForm = ({ onSubmit }) => {
+  const router = useRouter()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
@@ -73,23 +86,28 @@ const LoginForm = ({ onSubmit }) => {
     onSubmit({ username, password })
   }
 
+  const handleRegister = () => {
+    router.push('/register')
+  }
+
   return (
     <MainLayout>
       <HandImage src="../static/images/hand-emoji.png" />
-      <TitleText>Welcome back!</TitleText>
+      <TitleText>Добро пожаловать!</TitleText>
       <FormItemText>Username</FormItemText>
       <StyledTextInput
         type="text"
         value={username}
         onChange={e => setUsername(e.target.value)}
       />
-      <FormItemText>Password</FormItemText>
+      <FormItemText>Пароль</FormItemText>
       <StyledTextInput
         type="password"
         value={password}
         onChange={e => setPassword(e.target.value)}
       />
-      <StyledSubmitButton onClick={handleFormSubmit}>Login</StyledSubmitButton>
+      <RegisterDiv onClick={handleRegister}>Создать аккаунт</RegisterDiv>
+      <StyledSubmitButton onClick={handleFormSubmit}>Войти</StyledSubmitButton>
     </MainLayout>
   )
 }

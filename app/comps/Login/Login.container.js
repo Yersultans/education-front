@@ -36,7 +36,7 @@ const LoginContainer = () => {
       localStorage.setItem('clientToken', `${data.loginUser.token}`)
       fetchUser()
       router.push('/')
-      displayMessage({ type: 'notify', message: 'Successfully logged in' })
+      displayMessage({ type: 'notify', message: 'Успешно вошли в систему' })
     }
   }, [data, loading, error])
 
