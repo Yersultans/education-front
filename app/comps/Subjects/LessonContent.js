@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import { useQuery, gql } from '@apollo/client'
 import { Spin, Tabs } from 'antd'
+import YoutubePlayer from '../shared/YouTubePlayer'
 
 const { TabPane } = Tabs
 
@@ -16,6 +17,13 @@ const ContentName = styled.div`
   font-size: 32px;
 `
 const ContentDiv = styled.div``
+
+const PlayerContainer = styled.div`
+  width: 100%;
+  position: relative;
+  padding-bottom: 56.25%;
+  border-radius: 8px;
+`
 
 const GET_LESSON = gql`
   query getLesson($id: ID!) {
@@ -58,7 +66,9 @@ const LessonContent = ({ lessonId }) => {
           />
         </TabPane>
         <TabPane tab="Видео" key="2">
-          sadada
+          <PlayerContainer>
+            <YoutubePlayer url={lesson.videoUrl} />
+          </PlayerContainer>
         </TabPane>
       </Tabs>
     </ContentLayout>
