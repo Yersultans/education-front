@@ -1,6 +1,6 @@
 /* @flow */
 
-import Colors from './Colors';
+import Colors from './Colors'
 
 const Fonts = {
   futuraBook16: `
@@ -20,7 +20,7 @@ const Fonts = {
     font-size: 16px;
     color: ${Colors.black};
     line-height: 24px;
-  `,
-};
+  `
+}
 
-export default Fonts;
+export default Fonts

@@ -3,16 +3,26 @@ import { useMutation, gql } from '@apollo/client'
 import { useRouter } from 'next/router'
 import styled from 'styled-components'
 import { useMessages } from '../../context/useMessages'
-import { RegisterForm } from './RegisterForm'
-import { useRouter } from 'next/router'
+import RegisterForm from './RegisterForm'
+
+const MainLayout = styled.div`
+  background: #f0f2f5;
+  width: 90vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
 
 const REGISTER = gql`
   mutation register($input: UserInput!) {
-    register(input: $input) {
+    registerUser(input: $input) {
       id
       username
+      role
       firstName
       lastName
+      imageUrl
     }
   }
 `
@@ -26,8 +36,11 @@ const RegisterContainer = () => {
   useEffect(() => {
     if (!loading && error) {
       displayMessage({ type: 'error', message: JSON.stringify(error.message) })
-    } else if (data && data.register) {
-      displayMessage({ type: 'notify', message: 'Успешно зарегистрированный в систему' })
+    } else if (data && data.registerUser) {
+      displayMessage({
+        type: 'notify',
+        message: 'Успешно зарегистрированный в систему'
+      })
       router.push('/login')
     }
   }, [data, loading, error])
@@ -41,7 +54,11 @@ const RegisterContainer = () => {
     })
   }
 
-  return <RegisterForm onSubmit={handleSubmit} />
+  return (
+    <MainLayout>
+      <RegisterForm onSubmit={handleSubmit} />
+    </MainLayout>
+  )
 }
 
 export default RegisterContainer

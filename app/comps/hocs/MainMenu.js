@@ -11,7 +11,7 @@ import { UserOutlined, LogoutOutlined } from '@ant-design/icons'
 const links = [
   {
     label: 'Предметы',
-    url: '/',
+    url: '/subjects',
     iconUrl: '',
     dot: false,
     allowedUsers: ['user', 'admin']
@@ -34,6 +34,43 @@ const links = [
 
 const RigthColumn = styled.div``
 
+const MainContainer = styled.div`
+  display: flex;
+`
+
+const MainLogo = styled.div`
+  float: left;
+  line-height: 20px;
+  padding: 20px;
+  color: #71bd65;
+  font-size: 30px;
+`
+
+const MenuItam = styled.div`
+  padding: 0px 6px 0px 6px;
+  margin-right: 20px;
+  border-bottom-color: transparent;
+  cursor: pointer;
+  ${p =>
+    p.selected &&
+    `
+    background: #71bd65;
+  `};
+`
+
+const MenuItemText = styled.p`
+  color: #000;
+  ${p =>
+    !p.selected &&
+    `:hover {color: #71bd65;
+  }`};
+  ${p =>
+    p.selected &&
+    `
+  color: #fff;
+`};
+`
+
 function MainMenu() {
   const router = useRouter()
   const { user, logout } = useAuth()
@@ -47,6 +84,24 @@ function MainMenu() {
   const linksByRole = links.filter(
     link => user && link.allowedUsers.includes(user.role)
   )
+
+  const renderLinks = pathname => {
+    return linksByRole.map(({ url, label }) => (
+      <Link
+        key={label}
+        href={{
+          pathname: url,
+          query: {},
+          shallow: true
+        }}
+        passHref
+      >
+        <MenuItam selected={url === pathname}>
+          <MenuItemText selected={url === pathname}>{label}</MenuItemText>
+        </MenuItam>
+      </Link>
+    ))
+  }
 
   const menu = (
     <Menu>
@@ -66,12 +121,17 @@ function MainMenu() {
   )
 
   return (
-    <Layout.Header style={{ display: 'flex', justifyContent: 'space-between' }}>
-      <Menu
-        theme="dark"
-        mode="horizontal"
-        defaultSelectedKeys={[router.pathname]}
-      >
+    <Layout.Header
+      style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        background: '#fff',
+        borderBottom: '1px solid rgba(0, 0, 0, 0.25)'
+      }}
+    >
+      <MainLogo>ProEnt</MainLogo>
+      <MainContainer>{renderLinks(router.pathname)}</MainContainer>
+      {/* <Menu mode="horizontal" defaultSelectedKeys={[router.pathname]}>
         {linksByRole.map(({ url, label }) => (
           <Menu.Item key={url}>
             <Link
@@ -87,16 +147,16 @@ function MainMenu() {
             </Link>
           </Menu.Item>
         ))}
-      </Menu>
+      </Menu> */}
       {user && user.username ? (
-        <RigthColumn>
-          <Dropdown overlay={menu}>
+        <Dropdown overlay={menu}>
+          <RigthColumn>
             <Avatar icon={<UserOutlined />} />
-          </Dropdown>
-        </RigthColumn>
+          </RigthColumn>
+        </Dropdown>
       ) : (
         <RigthColumn>
-          <div onClick={() => logout()} style={{ color: '#fff' }}>
+          <div onClick={() => logout()} style={{ color: '#333333' }}>
             <LogoutOutlined /> Выйти
           </div>
         </RigthColumn>

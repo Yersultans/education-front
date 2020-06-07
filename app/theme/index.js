@@ -1,17 +1,17 @@
 // styled-components.ts
-import * as styledComponents from 'styled-components';
+import * as styledComponents from 'styled-components'
 
-import ColorMap from './Colors';
-import FontMap from './Fonts';
-import ImageMap from './Images';
+import ColorMap from './Colors'
+import FontMap from './Fonts'
+import ImageMap from './Images'
 
 const {
   default: styled,
   css,
   createGlobalStyle,
   keyframes,
-  ThemeProvider,
-} = styledComponents;
+  ThemeProvider
+} = styledComponents
 
 export {
   ColorMap,
@@ -20,6 +20,6 @@ export {
   css,
   createGlobalStyle,
   keyframes,
-  ThemeProvider,
-};
-export default styled;
+  ThemeProvider
+}
+export default styled

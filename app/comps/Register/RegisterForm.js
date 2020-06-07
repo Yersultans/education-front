@@ -50,7 +50,7 @@ const StyledTextInput = styled.input`
 const StyledSubmitButton = styled.button`
   margin-top: 56px;
   height: 48px;
-  background: #fdd842;
+  background: #71bd65;
   box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.4);
   border-radius: 8px;
   font-family: Roboto;
@@ -59,13 +59,13 @@ const StyledSubmitButton = styled.button`
   font-size: 20px;
   line-height: 24px;
   text-align: center;
-  color: #212428;
+  color: #fff;
 `
 
-const RegisterForm = ({ user, onSubmit }) => {
-  const [username, setUsername] = useState(user.username)
-  const [firstName, setFirstName] = useState(user.firstName)
-  const [lastName, setLastName] = useState(user.lastName)
+const RegisterForm = ({ onSubmit }) => {
+  const [username, setUsername] = useState('')
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
   const [password, setPassword] = useState('')
   const [repeatPassword, setRepeatPassword] = useState('')
   const handleSubmit = () => {
@@ -115,21 +115,13 @@ const RegisterForm = ({ user, onSubmit }) => {
         }
         onClick={handleSubmit}
       >
-        Sign Up
+        Зарегистрироваться
       </StyledSubmitButton>
     </MainLayout>
   )
 }
 
 RegisterForm.propTypes = {
-  user: PropTypes.shape({
-    username: PropTypes.string,
-    firstName: PropTypes.string,
-    lastName: PropTypes.string,
-    school: PropTypes.shape({
-      name: PropTypes.string
-    })
-  }).isRequired,
   onSubmit: PropTypes.func.isRequired
 }
 

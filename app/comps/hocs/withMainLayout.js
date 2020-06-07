@@ -25,9 +25,25 @@ const withMainLayout = Page => {
   return () => (
     <Layout>
       <MainMenu />
-      <Layout.Content>
+      <Layout.Content
+        style={{
+          background: '#fff',
+          width: '100%',
+          minHeight: '77.9vh',
+          height: '100%'
+        }}
+      >
         <Page />
       </Layout.Content>
+      <Layout.Footer
+        style={{
+          background: '#fff',
+          textAlign: 'center',
+          borderTop: '1px solid rgba(0, 0, 0, 0.25)'
+        }}
+      >
+        ProEnt © 2020 создано Ерсултаном, Жанатом и Адильжаном
+      </Layout.Footer>
     </Layout>
   )
 }

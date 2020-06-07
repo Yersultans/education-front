@@ -2,9 +2,12 @@ import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { useRouter } from 'next/router'
 import { gql, useLazyQuery } from '@apollo/client'
-import { Spin } from 'antd'
+import { Spin, Button, Modal } from 'antd'
 import LessonPanel from './LessonPanel'
 import Content from './Content'
+import { ExclamationCircleOutlined } from '@ant-design/icons'
+
+const { confirm } = Modal
 
 const MainContainer = styled.div`
   width: 100%;
@@ -22,6 +25,9 @@ const Sider = styled.div`
   border-right: 1px solid rgba(0, 0, 0, 0.05);
 `
 const SubjectDiv = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: 16px;
 `
 const SubjectName = styled.div`
@@ -104,12 +110,28 @@ const SubjectContainer = () => {
       </div>
     )
   if (error) return <div> some error </div>
+
+  const handleTestClick = () => {
+    confirm({
+      title: `Вы уверены что хотите пройти тест по Предмету ${subject.name}?`,
+      icon: <ExclamationCircleOutlined />,
+      okText: 'Да',
+      cancelText: 'Нет',
+      onOk() {
+        router.push({ pathname: '/quiz', query: { subjectId: subject.id } })
+      },
+      onCancel() {
+        console.log('Cancel')
+      }
+    })
+  }
+
   return (
     <MainContainer>
       <Sider>
         <SubjectDiv>
           <SubjectName>{subject.name}</SubjectName>
-          <SubjectButton>Тест по {subject.name}</SubjectButton>
+          <Button onClick={handleTestClick}>Тест</Button>
         </SubjectDiv>
         <LessonsDiv>
           {subject &&
@@ -120,14 +142,6 @@ const SubjectContainer = () => {
                 onClickLesson={handleClickLesson}
                 onClickActivity={handleClickActivity}
               />
-              // <LessonDiv
-              //   onClick={() => {
-              //     setCurrentContent({ lessonId: lesson.id })
-              //   }}
-              //   selected={lesson.id === currentContent.lessonId}
-              // >
-              //   {lesson.name}
-              // </LessonDiv>
             ))}
         </LessonsDiv>
       </Sider>

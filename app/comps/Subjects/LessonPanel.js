@@ -21,7 +21,7 @@ const LessonText = styled.div`
   ${p =>
     p.selected &&
     `
-color: #1746DD;
+color: #71bd65;
 cursor: pointer;
 
 `}
@@ -31,7 +31,7 @@ const ActivityText = styled.div`
   ${p =>
     p.selected &&
     `
-  color: #1746DD;
+  color: #71bd65;
   
 `}
   font-size: 15px;

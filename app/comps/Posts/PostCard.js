@@ -12,6 +12,7 @@ const MainContainer = styled.div`
   border-radius: 8px;
   margin-top: 32px;
   margin-right: 32px;
+  border: 1px solid rgba(0, 0, 0, 0.25);
 `
 
 const PostImage = styled.img`

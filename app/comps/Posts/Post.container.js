@@ -93,9 +93,13 @@ const PostTitle = styled.div`
   font-size: 32px;
   line-height: 40px;
 `
-const PostInfo = styled.div``
+const PostInfo = styled.div`
+  display: flex;
+`
 
-const PostAuthor = styled.div``
+const PostAuthor = styled.div`
+  margin-right: 16px;
+`
 
 const PostData = styled.div``
 
@@ -125,7 +129,7 @@ const MessageContent = styled.div`
   width: -webkit-fill-available;
 `
 const MainContent = styled.div`
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.25);
   border-radius: 6px;
   padding: 9px 17px 19px;
 `
@@ -212,7 +216,10 @@ const PostContainer = () => {
                 {post.user.firstName ? post.user.firstName : 'Ерсултан'}{' '}
                 {post.user.lastName ? post.user.lastName : 'Калыбаев'}
               </PostAuthor>
-              <PostData>{post.createdAt}</PostData>
+              <PostData>
+                <ClockCircleOutlined />
+                {post.createdAt}
+              </PostData>
             </PostInfo>
           </TitleRow>
           <ContentContainer

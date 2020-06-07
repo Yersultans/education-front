@@ -27,7 +27,7 @@ const MainName = styled.div`
   font-weight: 500;
   font-size: 40px;
   line-height: 40px;
-  color: #333333;
+  color: #71bd65;
 `
 const AddRow = styled.div``
 const AddFormButton = styled.button`
@@ -39,7 +39,7 @@ const AddFormButton = styled.button`
 const FormsDiv = styled.div``
 const FormDiv = styled.div`
   padding: 16px;
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.25);
   border-radius: 6px;
   background: #fff;
   margin-bottom: 8px;

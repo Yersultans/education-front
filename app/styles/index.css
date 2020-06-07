@@ -34,9 +34,10 @@
   margin: 30px 20px auto auto !important;
 }
 
-.ant-btn:hover {
+/* .ant-btn:hover {
   border-color: #7aea8c !important;
-}
+  color: #7aea8c !important;
+} */
 
 .sv_container {
   padding: 20px;

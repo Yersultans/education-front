@@ -8,11 +8,11 @@ const HistoryDiv = styled.div`
   justify-content: space-between;
   cursor: pointer;
   padding: 16px;
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.25);
   border-radius: 8px;
   margin-bottom: 16px;
   :hover {
-    color: #1746dd;
+    color: #71bd65;
     background: #e6f7ff;
   }
 `

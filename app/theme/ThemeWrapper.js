@@ -1,8 +1,12 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from 'react'
+import PropTypes from 'prop-types'
 import {
-  ThemeProvider, ColorMap, FontMap, ImageMap, createGlobalStyle,
-} from '.';
+  ThemeProvider,
+  ColorMap,
+  FontMap,
+  ImageMap,
+  createGlobalStyle
+} from '.'
 
 /* eslint-disable */
 const GlobalStyle = createGlobalStyle`
@@ -44,17 +48,16 @@ const GlobalStyle = createGlobalStyle`
 const theme = {
   colors: { ...ColorMap },
   fonts: { ...FontMap },
-  images: { ...ImageMap },
-};
+  images: { ...ImageMap }
+}
 
 class ThemeWrapper extends React.PureComponent {
-  static propTypes =
-  {
-    children: PropTypes.node.isRequired,
+  static propTypes = {
+    children: PropTypes.node.isRequired
   }
 
   render() {
-    const { children } = this.props;
+    const { children } = this.props
     return (
       <ThemeProvider theme={theme}>
         <React.Fragment>
@@ -62,12 +65,10 @@ class ThemeWrapper extends React.PureComponent {
           {children}
         </React.Fragment>
       </ThemeProvider>
-    );
+    )
   }
 }
 
-export default ThemeWrapper;
+export default ThemeWrapper
 
-export {
-  GlobalStyle,
-};
+export { GlobalStyle }

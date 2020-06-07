@@ -74,8 +74,8 @@ const UPDATE_FORM = gql`
   }
 `
 const MainContainer = styled.div`
-  width: 100vw;
-  height: 90vh;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   background: #fff;
@@ -111,7 +111,7 @@ const ContentContainer = styled.div`
   width: 60%;
 `
 const FormDescription = styled.div`
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.25);
   border-radius: 6px;
   padding: 9px 17px 19px;
 `
@@ -128,12 +128,13 @@ const Message = styled.div`
 `
 const UserAvatar = styled.div`
   margin-right: 16px;
+  margin-top: 16px;
 `
 const MessageContent = styled.div`
   width: -webkit-fill-available;
 `
 const MainContent = styled.div`
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.25);
   border-radius: 6px;
   padding: 9px 17px 19px;
 `

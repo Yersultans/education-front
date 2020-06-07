@@ -65,7 +65,7 @@ const StyledTextInput = styled.input`
 const StyledSubmitButton = styled.button`
   margin-top: 56px;
   height: 48px;
-  background: #fdd842;
+  background: #71bd65;
   box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.4);
   border-radius: 8px;
   font-family: Roboto;
@@ -74,7 +74,7 @@ const StyledSubmitButton = styled.button`
   font-size: 20px;
   line-height: 24px;
   text-align: center;
-  color: #212428;
+  color: #fff;
 `
 
 const LoginForm = ({ onSubmit }) => {

@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { useRouter } from 'next/router'
-import { useQuery, gql } from '@apollo/client'
+import { useLazyQuery, gql } from '@apollo/client'
 import { Spin } from 'antd'
 import Questions from './Questions'
 import { useAuth } from '../../context/useAuth'
@@ -24,14 +24,39 @@ const GET_DATA = gql`
 `
 
 const QuizContainer = () => {
+  const [questions, setQuestions] = React.useState([])
   const router = useRouter()
   const { user } = useAuth()
-  const { lessonId, subjectId } = router.query
-  const { loading, error, data } = useQuery(GET_DATA, {
-    variables: {
-      input: subjectId ? { subject: subjectId } : { lesson: lessonId }
+  const { lessonId, subjectId, activityId } = router.query
+  const [getQuiz, { loading, error, data }] = useLazyQuery(GET_DATA)
+
+  React.useEffect(() => {
+    if (subjectId) {
+      getQuiz({
+        variables: {
+          input: { subject: subjectId }
+        }
+      })
+    } else if (lessonId) {
+      getQuiz({
+        variables: {
+          input: { lesson: lessonId }
+        }
+      })
+    } else if (activityId) {
+      getQuiz({
+        variables: {
+          input: { activity: activityId }
+        }
+      })
     }
-  })
+  }, [subjectId, lessonId, activityId])
+
+  React.useEffect(() => {
+    if (data && data.quizby) {
+      setQuestions(data.quizby)
+    }
+  }, [data, loading, error])
   if (loading)
     return (
       <div style={{ textAlign: 'center' }}>

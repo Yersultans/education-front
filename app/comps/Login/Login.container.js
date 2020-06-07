@@ -35,7 +35,7 @@ const LoginContainer = () => {
     } else if (data && data.loginUser && data.loginUser.token) {
       localStorage.setItem('clientToken', `${data.loginUser.token}`)
       fetchUser()
-      router.push('/')
+      router.push('/subjects')
       displayMessage({ type: 'notify', message: 'Успешно вошли в систему' })
     }
   }, [data, loading, error])

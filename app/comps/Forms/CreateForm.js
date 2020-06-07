@@ -19,7 +19,7 @@ const MainName = styled.div`
   font-weight: 500;
   font-size: 40px;
   line-height: 40px;
-  color: #333333;
+  color: #71bd65;
 `
 const MainForm = styled.div``
 

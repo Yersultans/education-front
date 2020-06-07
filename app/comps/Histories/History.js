@@ -28,7 +28,7 @@ const QuestionsPagination = styled.div`
   width: 320px;
   height: fit-content;
   padding: 10px;
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.25);
 `
 const QuestionName = styled.div`
   font-size: 20px;
@@ -61,7 +61,7 @@ const QuestionTable = styled.div`
     `}
   padding: 10px;
   text-align: center;
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.25);
   cursor: pointer;
   margin: 1px;
   :hover {
