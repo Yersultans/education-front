@@ -3,6 +3,7 @@
 
 // ./pages/_document.js
 
+import React from 'react'
 import Document, { Head, Main, NextScript } from 'next/document'
 
 export default class MyDocument extends Document {
@@ -10,11 +11,7 @@ export default class MyDocument extends Document {
     return (
       <html lang="ru">
         <Head>
-          <link rel="shortcut icon" href="static/favicon (1).ico" />
-          <link
-            href="https://cdn.quilljs.com/1.3.6/quill.snow.css"
-            rel="stylesheet"
-          />
+          <link rel="shortcut icon" href="static/images/favicon.png" />
           <link
             href="https://fonts.googleapis.com/css?family=Roboto"
             rel="stylesheet"
