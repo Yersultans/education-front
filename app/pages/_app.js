@@ -16,7 +16,7 @@ import { ProvideAuth } from '../context/useAuth'
 import { ProvideMessages } from '../context/useMessages'
 
 const httpLink = new HttpLink({
-  uri: 'https://warm-cliffs-58797.herokuapp.com/graphql',
+  uri: 'https://education-admin.herokuapp.com/graphql',
   fetch
 })
 
