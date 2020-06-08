@@ -89,7 +89,7 @@
     "dev": "next -p 3001 ./app",
     "local": "BACKEND_URL=http://localhost:5001 next ./app",
     "build": "NODE_ENV=production next build app",
-    "start": "NODE_ENV=production next ./app",
+    "start": "NODE_ENV=production next start -p $PORT ./app",
     "heroku-postbuild": "npm run build",
     "format": "prettier --write app/**/**/**/*.js app/**/**/*.js app/**/*.js app/*.js"
   },
