@@ -17,7 +17,7 @@ export default class Page3 extends React.PureComponent {
     const children = page3.children.map((item, i) => (
       <Element key={i.toString()}>
         <BgElement className="banner" key="bg">
-        <DefaultPlayer
+        {/* <DefaultPlayer
             loop
             muted
             controls={['PlayPause', 'Seek', 'Time', 'Volume', 'Fullscreen']}
@@ -25,7 +25,7 @@ export default class Page3 extends React.PureComponent {
             key="video"
           >
             <source src={item.src} />
-          </DefaultPlayer> 
+          </DefaultPlayer>  */}
         </BgElement>
       </Element>
 
