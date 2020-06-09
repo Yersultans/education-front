@@ -17,7 +17,7 @@ const MainContainer = styled.div`
 
 const SubjectImage = styled.img`
   width: 328px;
-  height: 80px;
+  height: 180px;
   border-radius: 8px 8px 0px 0px;
   object-fit: cover;
 `
