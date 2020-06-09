@@ -3,6 +3,7 @@ import React from 'react';
 import TweenOne from 'rc-tween-one';
 import OverPack from 'rc-scroll-anim/lib/ScrollOverPack';
 import BannerAnim from 'rc-banner-anim';
+import { DefaultPlayer } from 'react-html5video';
 import { page3 } from './data';
 
 import YoutubePlayer from '../../shared/YouTubePlayer'
@@ -16,7 +17,15 @@ export default class Page3 extends React.PureComponent {
     const children = page3.children.map((item, i) => (
       <Element key={i.toString()}>
         <BgElement className="banner" key="bg">
-        <YoutubePlayer url={item.src} /> 
+        <DefaultPlayer
+            loop
+            muted
+            controls={['PlayPause', 'Seek', 'Time', 'Volume', 'Fullscreen']}
+            poster={isMobile ? item.imgMobile : item.img}
+            key="video"
+          >
+            <source src={item.src} />
+          </DefaultPlayer> 
         </BgElement>
       </Element>
 
