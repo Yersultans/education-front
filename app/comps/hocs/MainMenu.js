@@ -131,23 +131,6 @@ function MainMenu() {
     >
       <MainLogo>ProEnt</MainLogo>
       <MainContainer>{renderLinks(router.pathname)}</MainContainer>
-      {/* <Menu mode="horizontal" defaultSelectedKeys={[router.pathname]}>
-        {linksByRole.map(({ url, label }) => (
-          <Menu.Item key={url}>
-            <Link
-              key={label}
-              href={{
-                pathname: url,
-                query: {},
-                shallow: true
-              }}
-              passHref
-            >
-              {label}
-            </Link>
-          </Menu.Item>
-        ))}
-      </Menu> */}
       {user && user.username ? (
         <Dropdown overlay={menu}>
           <RigthColumn>
