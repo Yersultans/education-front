@@ -66,9 +66,14 @@ const QuizContainer = () => {
   if (error) return <div> some error </div>
   return (
     <>
-      {data && data.quizby && user && (
+      {data && data.quizby && data.quizby.length > 0 && user && (
         <Questions questions={data.quizby} user={user} />
       )}
+
+      {data && data.quizby && data.quizby.length < 1 && user && (
+        <div style={{ textAlign: 'center'}}>Пока нету вопросов</div>
+      )}
+
     </>
   )
 }

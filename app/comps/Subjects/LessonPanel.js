@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import { CheckCircleOutlined } from '@ant-design/icons'
@@ -45,30 +45,33 @@ const LessonPanel = ({
   onClickLesson,
   onClickActivity
 }) => {
-  const [display, setDisplay] = React.useState(
-    currentContent.lessonId === lesson.id
-  )
-  const onClick = () => {
-    setDisplay(!display)
-  }
+  const { lessonId, activityId } = currentContent
+  const [display, setDisplay] = React.useState(false)
+
+  React.useEffect(() => {
+    if(lessonId){
+      setDisplay(lessonId === lesson.id)
+    } 
+  },[lessonId, activityId])
+
   return (
     <MainContainer>
       <Container>
         <LessonText
-          selected={currentContent.lessonId === lesson.id}
+          selected={lessonId === lesson.id }
           onClick={() => onClickLesson(lesson.id)}
         >
           {lesson.name}
         </LessonText>
       </Container>
       <PanelContainer display={display}>
-        {lesson.activities.map(activity =>
-          activity ? (
+        {lesson.activities.map(activityData =>
+          activityData ? (
             <ActivityText
-              selected={currentContent.activityId === activity.id}
-              onClick={() => onClickActivity(activity.id)}
+              selected={activityId === activityData.id}
+              onClick={() => onClickActivity(activityData.id)}
             >
-              {activity.name}
+              {activityData.name}
             </ActivityText>
           ) : (
             <div>Null activity </div>

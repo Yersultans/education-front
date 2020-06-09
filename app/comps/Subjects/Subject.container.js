@@ -100,6 +100,7 @@ const SubjectContainer = () => {
   }
 
   const handleClickActivity = activityId => {
+    console.log('activity', activityId)
     setCurrentContent({ activityId })
   }
 
