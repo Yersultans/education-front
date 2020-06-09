@@ -80,7 +80,7 @@ function MainMenu() {
     if (!checkUserIsLoggedIn()) {
       router.push('/login')
     }
-  })
+  }, [])
   const linksByRole = links.filter(
     link => user && link.allowedUsers.includes(user.role)
   )

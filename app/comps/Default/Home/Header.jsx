@@ -24,7 +24,9 @@ export default function Header(props) {
     );
   });
   return (
-    <header {...props}>
+    <header {...props} style={{ position: 'absolute',
+      width: '100%',
+      zIndex: '10'}}>
       <Row className="nav">
         {menuChild}
       </Row>
